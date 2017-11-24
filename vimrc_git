@@ -1,0 +1,1237 @@
+"/home/jookwak/Users-GitStudy/jookwak-lvsthw-ch18-11242017 GitHub
+"jookwak 11132017 Study Reviews on the Exercises in the Steve Losh's book 'Learn Vimscript the Hard Way' Chapter18 'Responsible Coding' 
+
+" 1. Basic Settings -- -- {{{  
+===================
+" jookwak 11072017 Review on Learn Vimscript The Hard Way notes of 04172016
+" 4/17/2016 jookwak rev. 10202016
+" fr lvsthw by steve losh 
+" a note from learnvimscriptthehardway
+"
+" Chapter0: Prerequsite
+" creating a ~/.vimrc file. $HOME/.vimrc
+" :echo $MYVIMRC   $Home/jookwak/.vimrc
+"
+" Chapter1: Echoing Messages
+" Chapter on echoing message: ':echo, :echom and :message -----{{{
+:echo "Hello, world!"
+:echom "Hello again, world!"
+:echom "(>^.^<)"
+":messages
+"-----}}}
+"
+" Chapter2: Setting Options
+" Vimscript Setting Options ----- {{{ 
+"Boolean Options, :set <name>, :set no<name> 
+":set number 
+":set nonumber 
+"Toggling Boolean Options: :set <boolean option + !>  
+":set number!      "should reappear...(to) run it again....
+"Checking Options: :set number :set number? :set nonumber :set number?
+":set number?
+"Options With Values: 
+":set numberwidth=4
+"NonBoolean Options: :set <name>=<value> and check them the usual way (:set <name>?)
+"A Few Other Common Options:
+":set wrap
+":set shiftround
+":set matchtime
+"matchtime=5 jookwak 10192016
+"Setting Multiple Options At Once: 
+":set numberwidth=2
+":set nonumber
+":set number numberwidth=6
+:set number numberwidth=4
+" exercises2:
+":set relativenumber
+":set wrap
+":set shiftround
+":set matchtime
+" }}}
+"
+"Chapter8: Abbreviations
+" Vimscript iabbrev leader q jookwak date , lorem ipsum sampletextroses, sampletext4U sampletextline# asciiartcat ------------- {{{
+"that feel similar to mappings but are meant for use in insert, replace, and command modes. Vim has a feature called "abbreviations
+"About Insert Mode Abbreviations:
+"':iabbrev adn and
+"':iabbrev waht what
+"':iabbrev tehn then
+"Keyword Characters:
+"Vim will substitute an abbreviation when you type any 'non-keyword character' after an abbreviation
+"'Non-keyword character' means any character not in the 'iskeyword' option
+"':set iskeyword?
+"iskeyword=@,48-57,_,192-255
+"Keyword Characters:
+"The underscore character(_).
+"All alphabetic ASCII characters, both upper and lower case, and thir accented versions.
+"Any characters with an ASCII value between 48 and 57 (the digits zero through nine).
+"Any characters with an ASCII value between 192 and 255 (some special ASCII characters).
+":help isfname for the full description of this option's format
+"just simply remember that abbreviations will be expanded when you type anything that's not a letter, number, or underscore.
+"Non_Keyword Characters:
+"Vim will substitute an abbreviation when you type any 'non-keyword character' after an abbreviation.  
+"'Non-keyword character' means any character not in the iskeyword option. Run this command :set iskeyword?
+"More Abbreviations:
+"helpful in day-to-day text editing
+"correcting typos
+"':iabbrev @@ 	steve@stevelosh.com
+"':iabbrev ccopy Copyright 2013 Steve Losh, all rights reserved.
+"Feel free to replace my name and email address with your own, then enter insert mode and try them out
+"... take large chunks of text that you type often and compress them down to a few characters.
+:iabbrev <leader>q jookwak today's_date Python_study with 'Learn Python The Hard Way, third edition, by Zed A Shaw
+
+:iabbrev <leader>, -- A common form of lorem ipsum reads:Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. The paragraph-end.
+
+"Why Not Use Mappings:
+"':inoremap ssig -- <cr>Steve Losh<cr>steve@stevelosh.com
+"Larry Lessig wrote the book 'remix'
+"':iunmap ssig
+"':iabbrev ssig -- <cr>Steve Losh<cr>steve@stevelosh.com
+":iabbrev ssig -- <cr>
+:iabbrev sampletextroses -- <cr>Roses are red,<cr>Violets are blue,<cr>Sugar is sweet,<cr>And, so are you.
+:iabbrev sampletext4U max_connections_allowed.
+:iabbrev sampletextline# -- <cr>line1<cr>line2<cr>line3<cr>line4<cr>line5<cr>line6<cr>line7<cr>line8<cr>line9<cr>line10
+"':iabbrev a_friendly_ASCII-art_cat (>^.^<) 
+"'a_friendly_ASCII-art_cat 
+:iabbrev asciiartcat (>^.^<)
+
+"<leader>q
+"<leader>,
+" }}}
+
+"Chapter10: Training Your Fingers
+"fr lvsthw ch10 Training Your Fingers-----{{{
+:inoremap jk <esc>
+"There are a number of ways to exit insert mode in Vim by defalt:
+"<esc> <c-c> <c-[>
+"Learning The Map:
+"':inoremap <esc> <nop>
+:nnoremap "H viw<esc>A<esc>hb0i"<esc>j
+"jookwak 10222016
+:nnoremap 'h viw<esc>A<esc>hb0i#<esc>j
+"see ch13 Buffer-Local Abbreviations Exercises section line535
+"-----}}}
+
+"Chapter11: Buffer-Local Options and Mappings
+" Vimscript Buffer-Local Options and Mappings ----- {{{
+"4/21/2016 Joo Kwak
+"Study Reviews on: mappings(Chap3-9), abbreviations(Chap8), and options(Chap11), but with a twist.  'We are going to set each of them in a single buffer at a time....
+"The true power of this idea will become apparent in the next chapter, but we need to lay the groundwork for it now....
+"For this chapter you'll need to open two files in Vim, each in its own split.  I'll call them 'foo' and 'bar', but you can name them whatever you like.  Put some text into each of them....
+"Mappings:
+"Switch to file 'foo' and run the following commands:
+"':nnoremap <leader>d dd
+"':nnoremap <buffer> <leader>x dd
+"Using_Leaderx_For_Our_BufferLocalMapping:(bad; instead, use localleader)
+"Foo: buffer effects
+"Bar: the buffer didn't effect!
+"The: '<buffer>' in the second 'nnoremap' command told Vim to only consider that mapping when we're in the buffer where we defined it
+"Local Leader:
+"Settings:(per-buffer basis)
+"':setlocal wrap?
+"':setlocal wrap
+"':setlocal nowrap
+"':setlocal number?
+"':setlocal number
+"':setlocal nonumber
+"Shadowing: 'the first mapping is more specific than the second.'
+"Before we move on, let's look at a particularly interesting property of local mappings.  Switch over to 'foo' and run the following commands:
+"':nnoremap <buffer> Q x
+"':nnoremap          Q dd
+"Now type 'Q'. What happens?
+"When you press 'Q', Vim will run the first mapping, not the second, because the first mapping is 'more specific' than the second
+"Switch to file 'bar' and type 'Q' to see that Vim uses the second mapping, because it's not shadowed by the first in this buffer.
+"exercises11:
+"':help local-options
+"':help setlocal
+"':help map-local
+"-----}}}
+"-- -- }}}
+" 2. FileType-specific settings -- -- {{{
+===============================
+
+"Chapter12: Autocommands
+" Vimscript Autocommands -----{{{
+"4/21/2016 Joo Kwak
+"fr lvsthw ch12 Autocommands
+"Autocommands
+"Autocommands are a way to tell Vim to run certain commands whenever certain events happen.  
+"':autocmd BufNewFile * :write
+"Vim creates files as soon as you edit them.... (Even before they are saved for the first time).
+"You'll have to close Vim to remove the autocommand.  We'll talk about how to avoid this in a later chapter.
+
+"Autocommand Structure:
+"The 'event' to watch for.
+"A 'pattern' to filter the event
+"A 'pattern' to filter the event
+"':autocmd BufNewFile * :write
+"':autocmd BufNewFile *.txt :write
+"Another Example:
+"':autocmd BufWritePre *.html :normal gg=G
+"The event type is 'BufWritePre', which means the event will be checked just befofre you write any file
+"Multiple Events:
+"You can create a single autocommand bound to 'multiple' events by separating the events with a comma. 
+"':autocmd BufWritePre,BufRead *.html :normal gg=G
+"A common idiom in Vim scripting is to pair the 'BufRead' and 'BufNewFile' events together to run a command whenever you open a certain kind of file, regardless of whether it happens to exist already or not.  Run the following command:
+"':autocmd BufNewFile,BufRead *.html setlocal nowrap
+"This will turn line wrapping off whenever you're working on an HTML file.
+"File Type Events:
+"One of the most useful events is the 'FileType' event.  This event is fired whenever Vim sets a buffer's 'filetype'.
+"Let's set up a few useful mappings for a variety of file types.  Run the following commands:
+" Vimscript autocmd FileType js py nnoremap buffer localleader commentizing ------ {{{
+:augroup filetype_js_augroup
+:autocmd!
+:autocmd FileType javascript nnoremap <buffer> <localleader>c I//<esc>
+:augroup END
+
+:augroup filetype_py_augroup
+:autocmd!
+:autocmd FileType python     nnoremap <buffer> <localleader>c I#<esc>
+:augroup END
+
+:augroup filetype_vim_augroup
+:autocmd!
+:autocmd FileType vim nnoremap <buffer> <localleader>c I"<esc>
+
+:autocmd FileType vim nnoremap "H viw<esc>A<esc>hb0i"<esc>j
+:autocmd FileType vim nnoremap 'h viw<esc>A<esc>hb0i#<esc>j
+:augroup END
+" }}}
+"ch12 Exercises: 
+"Skim :help autocmd-events to see a list of all the events you can bind autocommands to.  You don't need to memorize each one right now.  Just try to get a feel for the kinds of things youcan do.
+" 4/24/2016 Joo Kwak
+"ref-line676 
+""":autocmd BufNewFile * :write
+""":autocmd BufNewFile *.txt :write
+"':autocmd BufWritePre *.html :normal gg=G
+"':autocmd BufWritePre,BufRead *.html :normal gg=G
+":normal gg=G indentation flushed to left margin
+
+"?????????????? 4/26/2016 Joo Kwak
+"for the lvsthw ch 14 Authcommad Groups Exercises
+":augroup filetype_html
+":autocmd!
+":autocmd FileType html nnoremap <buffer> <localleader>f Vatzf
+":augroup END
+"?????????????? 4/26/2016 Joo Kwak
+
+
+"Create a few 'FileType' autocommands that use 'setlocal' to set options for our favorite filetypes just the way you like them.  Some options you might like to change on a per-filetype basis are 'wrap', 'list', 'spell', and 'number'.
+""":autocmd BufNewFile,BufRead *.txt setlocal number
+""":autocmd BufNewFile,BufRead *.txt setlocal wrap
+""":autocmd BufNewFile,BufRead *.html setlocal nowrap
+
+:augroup bufnewfilebufread_group14_nu_wrap
+:autocmd!
+:autocmd BufNewFile * :write
+:autocmd BufNewFile *.txt :write
+:autocmd BufNewFile,BufRead *.txt setlocal number
+:autocmd BufNewFile,BufRead *.txt setlocal wrap
+:autocmd BufNewFile,BufRead *.py setlocal wrap
+:autocmd BufNewFile,BufRead *.vim setlocal wrap
+:autocmd BufNewFile,BufRead *.js setlocal nowrap
+:autocmd BufNewFile,BufRead *.html setlocal nowrap
+:augroup END
+
+
+"Create a few more 'comment this line' autocommands for filetypes you work with often.
+"in order to comment out the text file lines:
+"':nnoremap "H viw<esc>A<esc>hb0i"<esc>j line349
+"':iabbrev "H viw<esc>A<esc>hb0i"<esc>j line 350 4/25/2016 Joo Kwak
+
+
+"':autocmd FileType javascript nnoremap <buffer> <localleader>c I//<esc>
+"':autocmd FileType javascript nnoremap <buffer> \c I//<esc>
+"see ch13 Buffer-Local Abbreviations Exercises
+"':autocmd FileType javascript iabbrev <buffer> \c I//<esc> 
+"see ch13 Buffr-Local Abbreviations Exercise
+"jookwak 11112017
+:augroup filetype_js_ch13
+:autocmd!
+:autocmd FileType js nnoremap <buffer> <localleader>f Vatzf
+"jookwak 11102017
+":autocmd FileType js iabbrev <buffer> \c I//<esc>
+:autocmd FileType js iabbrev <buffer> <localleader>c I//<esc>
+:augroup END
+
+"':autocmd FileType python     nnoremap <buffer> <localleader>c I#<esc>
+"':autocmd FileType python nnoremap <buffer> \c I#<esc>
+"see ch13 Buffer-Local Abbreviations Exercise
+"':autocmd FileType python iabbrev <buffer> \c I#<esc>
+"see ch13 Bufnfer-Local Abbreviations Exercises
+
+:augroup filetype_py_ch13
+:autocmd!
+"':autocmd FileType py nnoremap <buffer> <localleader>f Vatzf
+"jookwak 11102017 localleader usage
+":autocmd FileType py iabbrev <buffer> \c I#<esc>
+:autocmd FileType py iabbrev <buffer> <localleader>c I#<esc>
+:augroup END
+"-----}}}
+
+"Chapter13: Buffer-Local Abbreviations
+" Vimscript Buffer-Local Abbreviations -----{{{
+" 4/23/2016 Joo Kwak
+" fr lvsthw ch13 Bufer-Local Abbreviations
+"That last chapter was a monster, so let's tackle something easier.  We've seen how to define buffer-local mappings and options, so let's apply the same idea to abbreviations.
+"Open your 'foo' and 'bar' files again, switch to 'foo', and run the following command:
+:iabbrev <buffer> --- &mdash;
+"While still in 'foo' enter insert mode and type the following text:
+"'Hello --- world.
+"Vim will replace the '---' for you.  Now switch to 'bar' and try it.  It should be no surprise that it's not replaced, because we defined the abbreviation to be local to the 'foo' buffer.
+"???????????????..switch to bar and try it('Hello --- world.)....
+"Autocommands And Abbreviations:
+"Let's pair up these bufer-local abbreviations with autocommands to set them to make ourselves a little 'snippet' system.
+"Run the following commands:
+":autocmd FileType python :iabbrev <buffer> iff if:<left>
+
+:augroup filetype_py_if_fn
+:autocmd!
+"':autocmd FileType py nnoremap <buffer> <localleader>f Vatzf
+"jookwak 11102017
+:autocmd FileType python :iabbrev <buffer> iff if:<left>
+":autocmd FileType py iabbrev <buffer> iff if:<left>
+:autocmd FileType python :iabbrev <buffer> rn return 
+
+:augroup END
+
+"':autocmd FileType javascript :iabbrev <buffer> iff if ()<left>
+
+:augroup filetype_js_if
+:autocmd!
+"':autocmd FileType js nnoremap <buffer> <localleader>f Vatzf
+"jookwak 11102017
+:autocmd FileType javascript :iabbrev <buffer> iff if ()<left>
+":autocmd FileType js iabbrev <buffer> iff if ()<left>
+":autocmd FileType javascript :iabbrev <buffer> fn function 
+
+:augroup END
+
+"Remember: the best way to learn to use these new snippets is to disable the old way of doing things.  running ':iabbrev <buffer> return NOPENOPENOPE' will force you to use your abbreviation instead.  Add these 'training' snippets to match all the ones you created to save time.
+"Snippet Abbreviations:
+"some candidates: return for most languages; function for javascript; &ldquo; &rdquo; for HTML files
+"R e t u r n *********
+:iabbrev <buffer> return NOPENOPE(ref study ch13) 
+":iunabbrev <buffer> return
+":iabbrev <buffer> --- &mdash;
+":iabbrev <buffer> rn return;
+":iabbrev <buffer> fn function;
+":iabbrev <buffer> --- &mdash;
+":iabbrev <buffer> --- &mdash;
+
+:augroup filetype_js_ch13_snippet_abbrev
+:autocmd!
+"':autocmd FileType js nnoremap <buffer> <localleader>f Vatzf
+"jookwak 11102017
+":autocmd FileType javascript :iabbrev <buffer> iff if ()<left>
+":autocmd FileType js iabbrev <buffer> iff if ()<left>
+:autocmd FileType javascript :iabbrev <buffer> fn function 
+:augroup END
+
+:augroup filetype_html_ch13_buffer_local_snippet_abbrev
+:autocmd!
+"':autocmd FileType js nnoremap <buffer> <localleader>f Vatzf
+"jookwak 11102017
+:autocmd FileType html :iabbrev <buffer> ----- &ldquo 
+":autocmd FileType html :iabbrev <buffer> ------ &rdquo 
+":autocmd FileType javascript :iabbrev <buffer> fn function 
+:augroup END
+"-- 
+"line1
+"line2
+"line3
+"line4
+"line5
+"line6
+"line7
+"line8
+"line9
+""line10
+"NOPENOPENOPE
+"'NOPENOPENOPE'
+"r e t u r n
+":iabbrev <buffer>
+":iunabbrev <buffer> return
+"-----}}}
+
+"Chapter14: Autocommand Groups
+" Vimscript Autocommand Groups -----{{{
+" 4/23/2016 Joo Kwak
+" fr lvsthw ch14 Autocommand Groups
+"A few chapters ago we learned about autocommands. Run the following command:
+:autocmd BufWrite * :echom "Writing buffer!"
+"Now write the current buffer with ':write' and run ':messages' to view the message log.  You should see the 'Writing buffer!' message in the list.
+"Now write the current buffer again and run ':messages' to view the message log.  You should see the 'Writing buffer!' message in the list twice.
+"Now run the exact same autocommand again:
+"':autocmd BufWrite * :echom "Writing buffer!"
+"Write the current buffer one more time and run ':messages'.  You will see the 'Writing buffer!' message in the list four times.  
+"When you create an autocommand like this Vim has no way of knowing if youwant it to replace an existing one.  In our case. Vim created two separate autocommands that each happen to do the same thing.
+"The Problem:
+"The problem is that sourcing your '~/.vimrc' firle rereads the entire file, including any autocommands you've defined!  This means that every time you source your '~/.vimrc' you'll be duplicating autocommands which will make Vim run slower because it executes the same commands over and over.
+"To simulate this, try running the following command:
+"'autocmd BufWrite * :sleep 200m
+"':autocmd BufWrite * :sleep 200m
+"':autocmd BufWrite * :sleep 200m
+"':autocmd BufWrite * :sleep 200m
+"Write the file again.  This time the slowness will be more apparent.
+"Grouping Autocommands:
+"Vim has a solution to the problem.  The first step is to group related autocommands into named groups.
+"Open a fresh instance of Vim to clear out the autocommands from before, then run the following commands:
+"':augroup testgroup
+"': autocmd BufWrite * :echom "Foo"
+"': autocmd BufWrite * :echom "Bar"
+"':augroup END
+"The indentation in the middle two lines is insignifiant.  You don't have to type it if you don't want to.
+"Write a buffer and check ':messages'.  You should see both 'Foo' and 'Bar'. Now run the following commands.
+"':augroup testgroup
+"': autocmd BufWrite * :echom 'Baz'
+"':agroup END
+"Try to guess what will happen when you write the buffer again.  Once you have a guess in mind, write the buffer and check ':messages' to see if you were correct.
+"Clearing Groups:
+"If you thought Vim would replace the group. you can see that you guessed wrong....  
+"When you use 'augroup' multiple times Vim will combine the groups each time.
+"If you want to clear a group you can use 'autocmd!' inside the group.  Run the following commands:
+"':augroup testgroup
+"': autocmd!
+"': autocmd BufWrite * :echom "Cats"
+"':augroup END
+"Now try writing your file and checking ':messages'.  This time Vim only echoed 'Cats' when you wrote the file.
+"Using_Autocommands_in Your Vimrc:
+"Now that we know how to group autocomands and clear those groups, we can use this to add autocommands to '~/.vimrc' that don't add a duplicate every time we source it.
+"Add the following to your '~/.vimrc' file:
+:augroup filetype_html_ch14
+:autocmd!
+:autocmd FileType html nnoremap <buffer> <localleader>f Vatzf
+:augroup END
+"We enter the 'filetype_html' group, immediately clear it, define an autocommand, and leave the group.  If we source '~/.vimrc' again the clearing will prevent Vim from adding duplicate autocommands
+"exercises14:
+"Go through your '~/.vimrc' file and wrap every autocommand you have in groups like this.  You can put multiple autocommands in the same group if it makes sense to you.
+
+"Try to figure out what the mapping in the last example does.
+":help autocmd-groups
+"-----}}}
+
+"Chapter15: Operator-Pending Mapings 
+"4/26/2016 Joo Kwak
+" Vimscript Operator-Pending Mapings ---Vimscript Onoremap-----{{{
+"fr lvsthw ch15 Operator-Pending Mappings
+"In this chapter we're going to explore one more rabbit hole in Vim's mapping system: 'operator-pending mappings'.  Let's step back for a second and makeksure we're clear on vocabulary.
+"An operator is a command that waits for you to enter a movement command, and then does something on the text between where you currently are and where the movement would take you.
+"Some examples of operators are 'd', 'y', and 'c'.  For example:
+"---------------------------------------------
+"| keys Operator Movement
+"| ----  ------- ----------------
+"|dw     Delete    to next word
+"|ci(    Change    inside parens
+"|yt,    Yank      until comma
+"+--------------------------------------------
+"text line (one)
+"sample text line ()
+"sample text line (three, and the end of the text)
+
+"Movement Mappings:
+"Vim lets you create new movements that work with all exising commands.  Run the folowing command:
+"jookwak 11122017
+":onoremap p i(
+"Now type the followng text into a buffer(:
+"'return person.get_pets(type="cat", fluffy_only=True)
+"Put your cursor on the word "cat" and type 'dp'.  Waht happened?  Vim deleted all the text inside the parentheses.  You can think of this new movement as "parameters".
+"landpeople 
+"-- 
+"line1()
+"llilline1(one, two, three)
+"line1()
+"lne1()
+"line2
+"line3line1(one, two, three)
+"lline1(one, two, three)
+"lone, two, three
+"line4
+"line5
+"line6
+"line7
+"line8
+"line9
+"line10
+"return person.get_pets(type="cat", fluffy_only=True)
+"return person.get_pets()    normal mode
+"type="cat", fluffy_only=True
+
+"'dp' "delete parameters"
+"'cp' "change parameters"
+
+"The 'onoremap' command tells Vim that when it's waiting for a movement to give to an operator and it sees '[', it should treat it like 'i('.  When we ran 'dp' it was like saying "delete parameters", which Vim translates to "delete inside parentheses".
+"We can use this new mapping immediately with all operators.  Type the same text as before into the buffer (or simply undo the change):
+"'return person.get_pets(type="cat", fluffy_only=True)
+"Put your cursor on the word "cat" and type 'cp'.  What happened?  Vim deleted all the text inside the parentheses, but this time it left you in insert mode because you used "change" instead of "delete". 
+
+"return person.get_pets(type="cat", fluffy_only=True)
+"'cp' "change" instead of "delete"
+"return person.get_pets()  insert mode
+"type="cat", fluffy_only=True
+
+
+"Let's try another example.  Run the following command:
+:onoremap b /return<cr>
+"'db' 
+"Now type the following text into a buffer:
+"'def count(i):
+"	i += 1
+"	print i
+"
+"	return foo
+"Put your cursor on the 'i' in the second line and press 'db'.  What happened?  Vim deleted the entire body of the function, all the way up until the 'return', which our mapping used Vim's normal search to find.
+"When you're trying to think about how to define a new operator-pending movement, you can think of it like this:
+"1. Start at the cursor position.
+"2. Enter visual mode (charwise).
+"3. ... Mapping keys go here ...
+"4. All the text you want to include in the movement should now be selected.
+"It's your job to fill in step three with the appropriate keys.
+
+"'def count(i):
+"	i += 1
+"	print i
+
+"	return foo
+" 'db'
+"'def count(i):
+"	return foo
+
+
+
+
+
+"Changing The Start:
+"You may have already seen a problem in what we've learned so far.  If our movements always have to start at the current cursor position it limits what we can do.
+"Vim isn't in the habit of limiting what you can do, so of course there's a way around this problem.  Run the following command:
+" onoremap ---------- {{{
+:onoremap in( :<c-u>normal! f(vi(<cr>
+"jookwak 11122017
+":onoremap in( :<c-u>normal! f(vp<cr>
+"jookwak 10232016
+":onoremap in( :<c-u>normal! f(lviw<cr>
+"'cin('
+
+"This might look frightening, but let's try it out.  Enter the following text into the buffer:
+"'print foo(bar)
+"print foo(bar) ;
+"Put your cursor somewhere in the word 'print' and type 'cin('.  Vim will delete the contents of the parenthese and place you in insert mode between them.
+"You can think of this mapping as meaning "inside next parentheses", and it will perform the operator on the text inside the next set of parentheses on the current line.
+"'cin('
+"'print foo(bar)
+"'print foo()
+
+
+
+"Let's make a companion "inside last parentheses" ("previous" would be a better word, but it would shadow the "paragraph" movement).  Run the following command:
+:onoremap il( :<c-u>normal! F)vi(<cr>
+"jookwak 11122017
+":onoremap il( :<c-u>normal! F)vp<cr>
+"'cil('
+"Try it out on some text of your own to make sure it works.
+
+"sample text () {foo(bar);[foo(bar)]}:
+"sample text (foo()) {foo(bar);[foo(bar)]}:
+"sample text (foo(bar)) {foo();[foo()]}:
+"sample text (foo(bar)) {foo(bar);[foo(bar)]}:
+"sample text (foo(bar)) {foo(bar);[foo(bar)]}:
+"sample text (foo(bar)) {foo(bar);[foo(bar)]}:
+
+"this(sample text) is an example text to display the Operator-Pending Mappings.
+
+"this() is an example text to display the Operator-Pending Mappings.
+
+"'cin(' 'cil('
+
+
+"So how do these mappings work?  First, the '<c-u>' is something special that you can ignore for now -- just trust me that it needs to be there to make the mappings work in all cases.  If we remove that we're left with:
+"':normal! F)vi(<cr>
+" ' :normal! ' is something we'll talk about in a later chapter, but for now it's enough to know that it is a command used to simulate pressing keys in normal mode.  For example, running ':normal! dddd' will delete two lines, just like pressing 'dddd'.  The '<cr>' at the end of the mapping is what executes the ':normal!' command.
+"So now we know that the mapping is essentially just running the last block of keys:
+"'F)vi(
+"This is fairly simple:
+"'  F)' : Move backwards to the nearest ')' character.
+"'  'vi(' : Visually select inside the parentheses.
+"We end up with the text we want to operate on visually selected, and Vim performs the operation on it as normal.
+"General Rules:
+"A good way to keep the multiple ways of creating operator-pending mappings straight is the remember the following two rules:
+"    If your operator-pending mapping ends with some text visually selected, Vim will operate on that text.
+"    Otherwise, Vim will operate on the text between the original cursor position and the new position.
+"exercises15:
+"Create operator-pending mappings for "around next parentheses" and "around last parentheses."
+
+"sample text () {foo(bar);[foo(bar)]}:
+"sample text (foo()) {foo(bar);[foo(bar)]}:
+"sample text (foo(bar)) {foo();[foo()]}:
+"sample text () {foo(bar);[foo(bar)]}:
+"sample text () {} {foo(bar);[foo(bar)]}:
+"sample text () {foo(bar);[foo(bar)]}:
+"sample text (foo(bar(baz()))))) 
+"f(f(vi)<cr>
+"???????????????????????????????????????
+"onoremap in(( :<c-u>normal! f(vi(dw<cr>
+"onoremap il(( :<c-u>normal! F)vi(dw<cr>
+"???????????????????????????????????????
+"':onoremap in( :<c-u>normal! f(vi(<cr>
+"':onoremap il( :<c-u>normal! F)vi(<cr>
+
+"Create similar mappings for in/around next/last for curly brackets.
+:onoremap in{ :<c-u>normal! f{vi{<cr>
+:onoremap il{ :<c-u>normal! F}vi{<cr>
+"':onoremap in{{ :<c-u>normal! f{vi{dw<cr>
+"':onoremap il{{ :<c-u>normal! F}vi{dw<cr>
+:onoremap in[ :<c-u>normal! f[vi[<cr>
+:onoremap il[ :<c-u>normal! f]vi[<cr>
+
+" }}}
+"----}}}
+
+"Chapter16: More Operator-Pending Mappings
+" Vimscript More Operator-Pending Mappings -----{{{
+"4/26/2016 Joo Kwak
+"fr lvsthw ch16 More Operator-Pending Mappings
+"The idea of operators and movements is one of the most important concepts in Vim, and it's one of the biggest reasons Vim is so efficent.  We're going to practice defining new motions a bit more, because extending this powerful idea makes Vim even more powerful.
+"Let's say you're writing some text in Markdown.  If you haven't used Markdown before, don't worry, for our purposes here it's very simple.  Type the following into a file:
+
+"Topic One
+"=========
+"This is some text about topic one.
+"It has multiple paragraphs.
+"Topic Two
+"=========
+"This is some text about topic two.  It has only one paragraph.
+
+
+"The lines "underlined" with '=' characters are treated as headings by Markdown.  Let's create some mappings that let us target headings with movements.  Run the following command:
+"':onoremap ih :<c-u>execute "normal! ?^==\\+$\r:nohlsearch\rkvg_"<cr>
+"This mapping is pretty complicated, so put your cursor in one of the paragraphs (not the headings ) and type 'cih'.  Vim will delete the heading of whatever section you're in and put you in insert mode ("changing inside heading").
+"It uses some things we've never seen before, so lets you at each piece individually.  The first part of the mapping, ':onoremap ih' is just the mapping command that we've seen before, so we'll skip over that.  We'll keep ignoring the '<c-u>' for the moment as well.
+"Now we're looking at the remainder of the line:
+":execute "normal! ?^==\\+$\r:nohlsearch \rkvg_"<cr>
+"Normal:
+"The ':normal' command takes a set of characters and performs whatever action they would do if they were typed in normal mode.  We'll go into greater detail in a later chapter, but we've seen it a few times already so it's time to at least get a taste.  Run this command:
+"':normal gg
+"Vim will move you to the top of the file.  Now run this command:
+"':normal >>
+"Vim will indent the current line.
+"For now, don't worry about the '!' after 'normal' in our mapping.  We'll talk about that later.
+"Execute:
+"normal! doesn't recognize "special characters" like  <cr>. There are a number of ways around this, ...
+"The 'execute' command takes a Vimscript string (which we'll cover in more detail later) and performs it as a command.  Run this:
+"':execute "write"
+"Vim will write your file, just as if you had typed ':write<cr>'.  Now run this command:
+"':execute "normal! gg"
+"Vim will run ':normal! gg, which as we just saw will move you to the top of the file.  But why bother with this when we could just run the 'normal!' command itself?
+"Look at the following command and try to gess what it will do:
+":normal! gg/a<cr>
+"It seems like it should:
+"    Move to the top of the file.
+"	Start a search.
+"'	Fill in "a" as the target to search for.
+"       Press return to perform the search.
+"Run it.  Vim will move to the top of the tile and nothing else!
+"The problem is that 'normal!' doesn't recognize "special characters" like <cr>.  There are a number of ways around this,  But the easiext to use and read is 'execute'.
+"When 'execute' looks at the string you tell it to run, it will substitute any special characters it finds BEFOREbefore running it.  In this case, '\r' is an escape sequence that means "carriage return".  The double backslash is also an escape sequence that puts a literal backslash in the string.
+"If we perform this replacement in our mapping and look at the result we can see that the mapping is going to perform:
+"':normal! ?^==\+$<cr>:nohlsearch<cr>kvg_
+"                 ^^^^           ^^^^
+"                  ||             ||
+"These are ACTUAL carriage returns, NOT the four characters "left angle brackett", "c", "r", and "right angle bracket".
+"So now 'normal!' will execute these characers as if we had typed them in normalmode.  Let's splitthem apart at the returns to findout what they're doing:
+"'?^==\+$
+"':nohlsearch
+"'kvg_
+"The first piece, '?^==\+$' performs a search backwards for any line that consists of two or more equal signs and nothing else.  This will leave our cursor on the first character of the line of equal signs.
+"We're searching backwards because when you say "change inside heading" while your cursor is in a section of text, you probably want to change the heading for that section, not the next one.
+"The second piece is the ':nohlsearch' command.  This simply clears the search gighlighting from the search we just performed so it's not distracting.
+"The final piece is a sequence of three normal mode commands:
+"	'K' : move up a line.  Since we were on the first character of the line of equal signs, we're now on the first character of the heading text.
+"	'v' : enter (characterwise) visual mode.
+"	'g' : move to the last non-blank characterof the current line.  We use this instead of '$'because '$' would highlight the newline characteras well, and this isn't what we want.
+"Results:
+"That was a lot of work, but now we've looked at each part of the mapping.  To recap:
+"	We created a operator-pending mapping for "inside this section's heading".
+"	We used 'execute' and 'normal!' to run the normal commands we needed to select the heading, and allowing us to use special characters in those.
+"	OUr mapping searches for the line of equal signs which denotes a heading and visually selects the heading text above that.
+"	Vim handles the rest.
+"Let's look at one more mapping before we move on.  Run the following command:
+"':onoremap ah :<c-u>execute "normal! ?^==\\+\r:nohlsearch\rg_vk0"<cr>
+"Try it by putting your cursor in a section's text and typing 'cah'.  This time Vim will delete not only the heading's text but also the line of equal signs that denotes a heading.  You can think of this movement as "around this section's heading".
+"What's different about this mapping?
+"Let's look at them side by side:
+"	:onoremap ih :<c-u>execute "normal! ?^==\\+$\r:nohlsearch\rkvg_"<cr>
+"	:onoremap ah :<c-u>execute "normal! ?^==\\+$\r:nohlsearch\rg_vk0"<cr>
+
+"for ch16 Exercise study copy fr /home/jookwak/mystuff-lvsthw/16markdowncih1group
+"4/28/2016 Joo Kwak
+"fr lvsthw ch16 More Operator-Pending Mappings Exercise sample markdown file study
+"help: pattern-overview
+"for /.vimrc file
+"':augroup 16markdowncih1group
+"=============================
+" FileType txt onoremap buffer localleader ih ah -------{{{
+:augroup filetype_txt
+	:autocmd!
+":autocmd FileType html nnoremap <buffer> <localleader>f Vatzf
+	:autocmd FileType txt onoremap <buffer> <localleader>ih :<c-u>execute "normal! ?^==\\+$\r:nohlsearch\rkvg_"<cr>
+	:autocmd FileType txt onoremap <buffer> <localleader>ah :<c-u>execute "normal! ?^==\\+$\r:nohlsearch\rg_vk0"<cr>
+"see the following exercises16,
+"	:autocmd FileType txt onoremap <buffer> \ih1 :<c-u>execute "normal! ?^--\\+$\r:nohlsearch\rkvg_"<cr>
+"	:autocmd FileType txt onoremap <buffer> \ah1 :<c-u>execute "normal! ?^--\\+$\r:nohlsearch\rg_vk0"<cr>
+:augroup END
+" }}}
+"The only difference from the previous mapping is the very end, where we select the text to operate on:
+"'inside heading: kvg_
+"'around heading: g_vk0
+"The rest of the mapping is the same, so we still start on the first character of the line of equal signs.  From there:
+"	'g_' : move to the last non-blank character in the line.
+"	'v' : enter (characterwise) visual mode.
+"	'k' : move up a line. this puts us on the line containing the heading's text.
+"	'0' : move to the first character of the line.
+"The result is that both the text and the equal signs end up visually selected, and Vim performs the operation on both.
+"exercises16:
+"Markdown can also have headings delimited with lines of '-' characters.  Adjust the regex in these mappings to work for either type of heading,  You may want to check out ':help patern-overview'.  Remember that the regex is inside of a string, so backslashes will need to be escaped.
+"Add two autocommands to your '~/.vimrc' file that will create these mappings.  Make sure to only map them in the appropriate buffers, and make sure to group them so they don't get duplicated each time ou source the file.
+"Read ':help normal'.
+"Read ':help execute'.
+"Read ':help expr-quote' to see the escape sequences you can use in strings.
+"Create a "inside next email address" operator-pending mapping so you can say "change inside next emial address". 'in@' is a good candidate for the keys to map.  You'll probably want to use '/...some regex...<cr>' for this.
+"Inside Next Email Address Operator Pending Mapping:
+"...use /...some regex...<cr> for this....
+
+:augroup filetype_txt
+	:autocmd!
+":autocmd FileType html nnoremap <buffer> <localleader>f Vatzf
+	:autocmd FileType txt onoremap <buffer> <localleader>in@ :<c-u>execute "normal! /@\r:nohlsearch\r"<cr>
+:augroup END
+"
+"for ch16 Exercise study copy fr /home/jookwak/mystuff-lvsthw/16markdowncih1group
+"4/28/2016 Joo Kwak
+"fr lvsthw ch16 More Operator-Pending Mappings Exercise sample markdown file study
+"help: pattern-overview
+"for /.vimrc file
+"':augroup 16markdowncih1group
+"-----------------------------
+"jookwak 11112017
+":augroup filetype_txt
+	":autocmd!
+":autocmd FileType html nnoremap <buffer> <localleader>f Vatzf
+"	:autocmd FileType txt onoremap <buffer> \ih :<c-u>execute "normal! ?^==\\+$\r:nohlsearch\rkvg_"<cr>
+"	:autocmd FileType txt onoremap <buffer> \ah :<c-u>execute "normal! ?^==\\+$\r:nohlsearch\rg_vk0"<cr>
+	":autocmd FileType txt onoremap <buffer> <localleader>ih1 :<c-u>execute "normal! ?^--\\+$\r:nohlsearch\rkvg_"<cr>
+	":autocmd FileType txt onoremap <buffer> <localleader>ah1 :<c-u>execute "normal! ?^--\\+$\r:nohlsearch\rg_vk0"<cr>
+":augroup END
+"
+":augroup filetype_txt16
+"	:autocmd!
+""'autocmd FileType html nnoremap <buffer> <localleader>f Vatzf
+"	:autocmd FileType txt nnoremap <buffer> \ih :<c-u>execute "normal! ?^==\\+$\r:nohlsearch\rkvg_"<cr>
+"	:autocmd FileType txt onoremap <buffer> \ah :<c-u>execute "normal! ?^==\\+$\r:nohlsearch\rg_vk0"<cr>
+"	:autocmd FileType txt onoremap <buffer> \ih1 :<c-u>execute "normal! ?^--\\+$\r:nohlsearch\rkvg_"<cr>
+"	:autocmd FileType txt onoremap <buffer> \ah1 :<c-u>execute "normal! ?^--\\+$\r:nohlsearch\rg_vk0"<cr>
+":augroup END
+""??????? 4/23/2016 Joo Kwak
+
+":nnoremap "H viw<esc>A<esc>hb0i"<esc>j
+""jookwak 10222016
+":nnoremap 'h viw<esc>A<esc>hb0i#<esc>j
+
+"Topic One
+"=========
+
+"	This is some text about topic one.
+
+"It has multiple paragraphs.
+
+
+"=========
+"This is some text about topic two. It has only one paragraph.
+"-the end-
+""'cih'
+""'cah'
+""Remember that the regex is inside of a string, so backslashes will need to be escaped
+"===
+"---
+"?^==\+
+":onoremap ih :<c-u>execute "normal! ?^==\\+$\r:nohlsearch\rkvg_"<cr>
+":onoremap ah :<c-u>execute "normal! ?^==\\+$\r:nohlsearch\rg_vk0"<cr>
+
+":onoremap ih1 :<c-u>execute "normal! ?^--\\+$\r:nohlsearch\rkvg_"<cr>
+":onoremap ah1 :<c-u>execute "normal! ?^--\\+$\r:nohlsearch\rg_vk0"<cr>
+
+
+"augroup 16markdowncih1group
+"autocmd!
+""autocmd FileType html nnoremap <buffer> <localleader>f Vatzf
+""autocmd FileType txt onoremap <buffer> \ih :<c-u>execute "normal! ?^==\\+$\r:nohlsearch\rkvg_"<cr>
+""autocmd FileType txt onoremap <buffer> \ah :<c-u>execute "normal! ?^==\\+$\r:nohlsearch\rg_vk0"<cr>
+"autocmd FileType txt onoremap <buffer> \ih1 :<c-u>execute "normal! ?^--\\+$\r:nohlsearch\rkvg_"<cr>
+"autocmd FileType txt onoremap <buffer> \ah1 :<c-u>execute "normal! ?^--\\+$\r:nohlsearch\rg_vk0"<cr>
+"augroup END
+
+"Topic One
+"---------
+
+"	This is some text about topic one.
+
+"It has multiple paragraphs.
+
+"Topic Two
+"----------
+
+"This is some text about topic two. It has only one paragraph.
+
+
+"-the end-
+"':onoremap ih1 :<c-u>execute "normal! ?^--\\+$\r:nohlsearch\rkvg_"<cr>
+"':onoremap ah1 :<c-u>execute "normal! ?^--\\+$\r:nohlsearch\rg_vk0"<cr>
+"-----}}}
+
+"Chapter18: Responsible Coding
+" Vimscript Responsible Coding -----{{{
+"fr lvsthw ch18 Responsible Coding
+"Commenting:
+"Grouping:
+"Code Folding Capabilities: zc restore fold zR open all zM close all
+"Group Lines Into Sections:
+
+
+" Vimscript file settings (using the 'marker' method of folding)-----{{{
+augroup filetype_vim
+    autocmd!
+    autocmd FileType vim setlocal foldmethod=marker
+"jookwak 11182017
+"Ch18 exercises on how to make Vim fold everything automatically the first time you open the file
+"close all
+autocmd FileType vim setlocal foldlevelstart=99
+"autocmd FileType vim setlocal foldlevelstart=20
+"autocmd FileType vim setlocal foldlevelstart=0 
+"au BufRead * normal zR declare an a command au triggered when a buffer is read matching all files (*) and executes the zR open all folders command in normal mode
+"zc restore folder
+"zR open all folder
+"zM close all folder
+
+augroup END
+" }}}
+
+" Vimscript file settings (using the 'marker','indent', or 'syntax' method of folding)-----{{{
+""augroup filetype_vim_foldmethod
+    ""autocmd!
+"    autocmd FileType vim setlocal foldmethod=marker
+"    autocmd FileType vim setlocal foldmethod=indent
+"    autocmd FileType vim setlocal foldmethod=syntax
+
+"    autocmd FileType vim setlocal foldlevel=20
+"    autocmd FileType vim setlocal foldlevelstart=20
+    ""autocmd FileType vim setlocal foldlevelstart=0 "all folded
+""augroup END
+" }}}
+"jookwak 11182017 fr a foldlevelstart google search
+"Note. Perl automatically set foldermethod in the syntax file
+""autocmd syntax c,cpp,vim,xml,html,xhtml setlocal foldermethod=syntax
+"open all folder
+"autocmd syntax c,cpp,vim,xml,html,xhtml,perl normal zR 
+"close all folder 
+""autocmd syntax c,cpp,vim,xml,html,xhtml,perl normal zM
+"restore folder zc
+
+
+"Short Names:
+"':setlocal wrap
+"':setl wrap
+"-----}}}
+"-- -- }}}
+" 3. Mappings -- --{{{
+=============
+" Chapter3: Basic Mapping
+" Vimscript Basic Mapping viw dd za move a line up/down remove mapping reset to normal to non-recursive counterparts------- {{{
+":map - x
+":map - dd
+":noremap ref ch5 non-recursive counterparts
+"Special Characters:
+":map <space> viw
+":nunmap <space>
+":nnoremap <space> viw
+:nnoremap j; viw
+":map <c-d> dd
+":nunmap <c-d> 
+:nnoremap <c-d> dd
+"set nonrecursive to nnoremap (Ch5) 4/18/2016
+"Commenting:
+":map <space> viw
+":map <space> viw " Select word 
+":viw<space>"<space>Select>word
+":nunmap <space>
+"Make Space More Useful:
+:nnoremap <space> za
+" exercises3:
+" jookwak 10202016
+" Vimscript leader pursuiant to ch6 Move A Line Down/Up 
+" Move A Line Down:
+:nnoremap <leader> ddp 
+"or,,,,,,,, :nnoremap - ddp (Ch5) ****** Good!
+"or,,,,,,,, :nnoremap <leader> ddo<esc>p<esc>kdd
+" Move A Line UP:
+:nnoremap _ ddkO<esc>pkdd 
+"or,,,,,,,, :nnoremap _ ddkkp (Ch5) ***** Good!
+"or,,,,,,,, :iabbrev _ ddkkp (Ch13 Buffer-Local Abbreviations Exercise)
+"line one
+"line two
+"line three
+"line four
+"line five
+"line six
+" ----}}}
+" Remove A Mapping And Reset To Normal Function: ----- {{{
+"Append: Ch5 exercise for non recursive mapping
+":map - ddkkp
+":unmap -
+":unmap _
+":unmap \
+":unmap <c-d>
+":unmap <space>
+":nunmap <space>
+":nunmap -
+":nunmap _
+":nunmap \
+":nunmap <c-d>
+":nunmap <c-u>
+":nunmap <c-l>
+":iunmap <c-d> 
+":iunmap <c-u>
+":iunmap <c-l>
+":iunmap <c-b>
+":iunmap <c-w>
+":iunmap <c-h>
+":iunmap <c-l>
+":iunmap <c-j>
+":iunmap <c-k>
+":vunmap \ 
+":vunmap <c-d>
+":vunmap <c-u>
+":vunmap <c-l>
+" }}}
+" Chapter4: Modal Mapping 
+" Vimscript Modal Mapping inv-noremap dd u U hjkl------{{{ 
+":nmap \ dd
+":vmap \ U
+":nnoremap \ dd
+":vnoremap \ U
+" Insert Mode:
+":imap <c-d> dd
+":imap <c-d> <esc>dd
+":imap <c-d> <esc>ddi
+:inoremap <c-d> <esc>ddi
+" exercises4:
+" jookwak 10202016
+:inoremap <c-u> <esc>lvU<esc>i
+:inoremap <c-l> <esc>lvu<esc>i
+:inoremap <c-b> <esc>bi
+:inoremap <c-w> <esc>lwi
+:inoremap <c-h> <esc>lhi
+:inoremap <c-l> <esc>lli
+:inoremap <c-j> <esc>lji
+:inoremap <c-k> <esc>lki
+:nnoremap <c-u> <esc>vU
+:nnoremap <c-l> <esc>vu
+:vnoremap <c-u> U
+:vnoremap <c-l> u
+" }}}
+" Chapter5: Strict Mapping 
+" Vimscript Strict Mapping ----- {{{
+"Creating Timesaving Key Mappings And Its Downside: 
+"'nmap - dd 
+"'nmap \ -
+"Removing Those Mappings:
+"':nunmap -
+"':nunmap \
+"Recursion:
+"':nmap dd O<esc>jddk RECURSIVE dd!
+"Exit Insert Mode:
+"move back down
+"delete the current line
+"move up to the blank line just created
+"<c-c>
+"':nunmap dd
+"Side Effects:
+"One downside of the '*map' commands is the danger of resursing.  Another is that their behavior can change if you install a plugin that maps keys they depend on.
+"to make sure none of your custom mappings use a key that the plugin has mapped
+"This would make installing plugins tedious and error-prone.  There must be a better way
+"Nonrecursive Mapping:
+"Vim offers another set of mapping commands that will not take mappings into account when they perform their actions
+"':nmap x dd
+"':nnoremap \ x
+"whatever it would do for 'x' by default.  Instead of deleting the current line, it deletes the current character
+"Each of the '*map' commands has a '*noremap' counterpart that ignores other mappings: noremap, nnoremap, vnoremap, and inoremap
+"the nonrecursive variants... Always
+"just in case later install plugins
+"or add a new custom mapping
+" exercises5:
+"Convert all the mappings you added to your '~/.vimrc' file in the previous chapters to their nonrecursive counterparts.
+":help unmap ----}}}
+" Chapter6: Leaders 
+"Ch6 Vimscript Mapping nnoremap leader to prevent shadow d dd c ddO  
+" Vimscript Mapping nnoremap Setting Mapleader ----- {{{
+:nnoremap <leader>d dd 
+:nnoremap <leader>c ddO 
+"Setting Mapleader:
+:let mapleader = "-"  
+"}}}
+"Local Leader: 
+" Vimscript Mapping nnoremap Setting Maplocalleader -------{{{ 
+"Setting Maplocalleader:
+:let maplocalleader = "\\"
+" }}}
+"Chapter7: Editing Your Vimrc
+" Vimscript editing and sourcing vimrc file -------------- {{{
+"Editing Mapping:
+:nnoremap <leader>ev :vsplit $MYVIMRC<cr>  
+"Sourcing Mapping:
+:nnoremap <leader>sv :source $MYVIMRC<cr>   
+" }}}
+"Chapter9: More Mappings
+" Vimscript To double-quote, single-, commentize -------- {{{
+"A More Complicated Mapping:
+:nnoremap d" viw<esc>a"<esc>hbi"<esc>lel
+:nnoremap d' viw<esc>a'<esc>hbi'<esc>lel
+:nnoremap dH viw<esc>0
+:nnoremap dL viw<esc>A<esc>h
+"see ch13 Buffer-Local Abbreviations Exercises usage of iabbrev's instead 4/25/2016 Joo Kwak
+"':iabbrev d" viw<esc>a"<esc>hbi"<esc>lel
+"':iabbrev d' viw<esc>a'<esc>hbi'<esc>lel
+"':iabbrev dH viw<esc>0
+"':iabbrev dL viw<esc>A<esc>h
+" ----- }}}
+"-- --}}}
+" 4. Status Line -- --{{{
+================
+"Chapter17: Status Lines
+"fr lvsthw ch17 Status Lines
+" Status Line (file type txt)-----{{{
+:augroup statusline_ch17_text 
+:autocmd!
+":autocmd BufNewFile * :write
+":autocmd BufNewFile *.txt :write
+":autocmd BufNewFile,BufRead *.txt setlocal 
+:autocmd BufNewFile,BufRead *.txt setlocal laststatus=2
+":autocmd BufNewFile,BufRead *.txt setlocal statusline=
+:autocmd BufNewFile,BufRead *.txt setlocal statusline+=%F\ -\ FileType:\ %y "abs path to the file; FileType
+":autocmd BufNewFile,BufRead *.txt setlocal statusline+=%=    "Switch to the right side
+:autocmd BufNewFile,BufRead *.txt setlocal statusline+=/    "Separator
+:autocmd BufNewFile,BufRead *.txt setlocal statusline+=[Current:\ %-4l]\ [Total:\ %4L] "[Current line] [Total lines]
+:autocmd BufNewFile,BufRead *.txt setlocal statusline+=col:\ %c,
+:augroup END
+":autocmd BufNewFile,BufRead *.txt setlocal number
+":autocmd BufNewFile,BufRead *.txt setlocal statusline+=/
+":autocmd BufNewFile,BufRead *.txt setlocal wrap
+":autocmd BufNewFile,BufRead *.py setlocal wrap
+":autocmd BufNewFile,BufRead *.vim setlocal wrap
+":autocmd BufNewFile,BufRead *.js setlocal nowrap
+":autocmd BufNewFile,BufRead *.html setlocal nowrap
+":augroup END
+
+" }}}
+
+" Status Line (file type py)-----{{{
+:augroup statusline_ch17_python 
+:autocmd!
+":autocmd BufNewFile * :write
+":autocmd BufNewFile *.py :write
+":autocmd BufNewFile,BufRead *.py setlocal 
+:autocmd BufNewFile,BufRead *.py setlocal laststatus=2
+":autocmd BufNewFile,BufRead *.py setlocal statusline=
+:autocmd BufNewFile,BufRead *.py setlocal statusline+=%F\ -\ FileType:\ %y "abs path to the file; FileType
+":autocmd BufNewFile,BufRead *.py setlocal statusline+=%=    "Switch to the right side
+:autocmd BufNewFile,BufRead *.py setlocal statusline+=/    "Separator
+:autocmd BufNewFile,BufRead *.py setlocal statusline+=[Current:\ %-4l]\ [Total:\ %4L] "[Current line] [Total lines]
+:autocmd BufNewFile,BufRead *.py setlocal statusline+=col:\ %c,
+:augroup END
+":autocmd BufNewFile,BufRead *.py setlocal number
+":autocmd BufNewFile,BufRead *.py setlocal statusline+=/
+":autocmd BufNewFile,BufRead *.py setlocal wrap
+":autocmd BufNewFile,BufRead *.vim setlocal wrap
+":autocmd BufNewFile,BufRead *.js setlocal nowrap
+":autocmd BufNewFile,BufRead *.html setlocal nowrap
+":augroup END
+" }}}
+
+" Status Line (file type C)-----{{{
+:augroup statusline_ch17_C 
+:autocmd!
+":autocmd BufNewFile * :write
+":autocmd BufNewFile *.c :write
+":autocmd BufNewFile,BufRead *.c setlocal 
+:autocmd BufNewFile,BufRead *.c setlocal laststatus=2
+":autocmd BufNewFile,BufRead *.c setlocal statusline=
+:autocmd BufNewFile,BufRead *.c setlocal statusline+=%F\ -\ FileType:\ %y "abs path to the file; FileType
+":autocmd BufNewFile,BufRead *.c setlocal statusline+=%=    "Switch to the right side
+:autocmd BufNewFile,BufRead *.c setlocal statusline+=/    "Separator
+:autocmd BufNewFile,BufRead *.c setlocal statusline+=[Current:\ %-4l]\ [Total:\ %4L] "[Current line] [Total lines]
+:autocmd BufNewFile,BufRead *.c setlocal statusline+=col:\ %c,
+:augroup END
+":autocmd BufNewFile,BufRead *.c setlocal number
+":autocmd BufNewFile,BufRead *.c setlocal statusline+=/
+":autocmd BufNewFile,BufRead *.c setlocal wrap
+":autocmd BufNewFile,BufRead *.vim setlocal wrap
+":autocmd BufNewFile,BufRead *.js setlocal nowrap
+":autocmd BufNewFile,BufRead *.html setlocal nowrap
+":augroup END
+" }}}
+
+" Status Line (file type C++)-----{{{
+:augroup statusline_ch17_cpp 
+:autocmd!
+":autocmd BufNewFile * :write
+":autocmd BufNewFile *.cpp :write
+":autocmd BufNewFile,BufRead *.cpp setlocal 
+:autocmd BufNewFile,BufRead *.cpp setlocal laststatus=2
+":autocmd BufNewFile,BufRead *.cpp setlocal statusline=
+:autocmd BufNewFile,BufRead *.cpp setlocal statusline+=%F\ -\ FileType:\ %y "abs path to the file; FileType
+":autocmd BufNewFile,BufRead *.cpp setlocal statusline+=%=    "Switch to the right side
+:autocmd BufNewFile,BufRead *.cpp setlocal statusline+=/    "Separator
+:autocmd BufNewFile,BufRead *.cpp setlocal statusline+=[Current:\ %-4l]\ [Total:\ %4L] "[Current line] [Total lines]
+:autocmd BufNewFile,BufRead *.cpp setlocal statusline+=col:\ %c,
+:augroup END
+":autocmd BufNewFile,BufRead *.cpp setlocal number
+":autocmd BufNewFile,BufRead *.cpp setlocal statusline+=/
+":autocmd BufNewFile,BufRead *.cpp setlocal wrap
+":autocmd BufNewFile,BufRead *.vim setlocal wrap
+":autocmd BufNewFile,BufRead *.js setlocal nowrap
+":autocmd BufNewFile,BufRead *.html setlocal nowrap
+":augroup END
+" }}}
+
+" Status Line (file type vim)-----{{{
+:augroup statusline_ch17_vim 
+:autocmd!
+":autocmd BufNewFile * :write
+":autocmd BufNewFile *.vim :write
+":autocmd BufNewFile,BufRead *.vim setlocal 
+:autocmd BufNewFile,BufRead *.vim setlocal laststatus=2
+":autocmd BufNewFile,BufRead *.vim setlocal statusline=
+:autocmd BufNewFile,BufRead *.vim setlocal statusline+=%F\ -\ FileType:\ %y "abs path to the file; FileType
+":autocmd BufNewFile,BufRead *.vim setlocal statusline+=%=    "Switch to the right side
+:autocmd BufNewFile,BufRead *.vim setlocal statusline+=/    "Separator
+:autocmd BufNewFile,BufRead *.vim setlocal statusline+=[Current:\ %-4l]\ [Total:\ %4L] "[Current line] [Total lines]
+:autocmd BufNewFile,BufRead *.vim setlocal statusline+=col:\ %c,
+:augroup END
+":autocmd BufNewFile,BufRead *.vim setlocal number
+":autocmd BufNewFile,BufRead *.vim setlocal statusline+=/
+":autocmd BufNewFile,BufRead *.vim setlocal wrap
+":autocmd BufNewFile,BufRead *.js setlocal nowrap
+":autocmd BufNewFile,BufRead *.html setlocal nowrap
+":augroup END
+" }}}
+
+" Status Line (file type xml)-----{{{
+:augroup statusline_ch17_xml 
+:autocmd!
+":autocmd BufNewFile * :write
+":autocmd BufNewFile *.xml :write
+":autocmd BufNewFile,BufRead *.xml setlocal 
+:autocmd BufNewFile,BufRead *.xml setlocal laststatus=2
+":autocmd BufNewFile,BufRead *.xml setlocal statusline=
+:autocmd BufNewFile,BufRead *.xml setlocal statusline+=%F\ -\ FileType:\ %y "abs path to the file; FileType
+":autocmd BufNewFile,BufRead *.xml setlocal statusline+=%=    "Switch to the right side
+:autocmd BufNewFile,BufRead *.xml setlocal statusline+=/    "Separator
+:autocmd BufNewFile,BufRead *.xml setlocal statusline+=[Current:\ %-4l]\ [Total:\ %4L] "[Current line] [Total lines]
+:autocmd BufNewFile,BufRead *.xml setlocal statusline+=col:\ %c,
+:augroup END
+":autocmd BufNewFile,BufRead *.xml setlocal number
+":autocmd BufNewFile,BufRead *.xml setlocal statusline+=/
+":autocmd BufNewFile,BufRead *.xml setlocal wrap
+":autocmd BufNewFile,BufRead *.js setlocal nowrap
+":autocmd BufNewFile,BufRead *.html setlocal nowrap
+":augroup END
+" }}}
+
+" Status Line (file type html)-----{{{
+:augroup statusline_ch17_html 
+:autocmd!
+":autocmd BufNewFile * :write
+":autocmd BufNewFile *.html :write
+":autocmd BufNewFile,BufRead *.html setlocal 
+:autocmd BufNewFile,BufRead *.html setlocal laststatus=2
+":autocmd BufNewFile,BufRead *.html setlocal statusline=
+:autocmd BufNewFile,BufRead *.html setlocal statusline+=%F\ -\ FileType:\ %y "abs path to the file; FileType
+":autocmd BufNewFile,BufRead *.html setlocal statusline+=%=    "Switch to the right side
+:autocmd BufNewFile,BufRead *.html setlocal statusline+=/    "Separator
+:autocmd BufNewFile,BufRead *.html setlocal statusline+=[Current:\ %-4l]\ [Total:\ %4L] "[Current line] [Total lines]
+:autocmd BufNewFile,BufRead *.html setlocal statusline+=col:\ %c,
+:augroup END
+":autocmd BufNewFile,BufRead *.html setlocal number
+":autocmd BufNewFile,BufRead *.html setlocal statusline+=/
+":autocmd BufNewFile,BufRead *.html setlocal wrap
+":autocmd BufNewFile,BufRead *.js setlocal nowrap
+":autocmd BufNewFile,BufRead *.html setlocal nowrap
+":augroup END
+" }}}
+
+" Status Line (file type xhtml)-----{{{
+:augroup statusline_ch17_xhtml 
+:autocmd!
+":autocmd BufNewFile * :write
+":autocmd BufNewFile *.xhtml :write
+":autocmd BufNewFile,BufRead *.xhtml setlocal 
+:autocmd BufNewFile,BufRead *.xhtml setlocal laststatus=2
+":autocmd BufNewFile,BufRead *.xhtml setlocal statusline=
+:autocmd BufNewFile,BufRead *.xhtml setlocal statusline+=%F\ -\ FileType:\ %y "abs path to the file; FileType
+":autocmd BufNewFile,BufRead *.xhtml setlocal statusline+=%=    "Switch to the right side
+:autocmd BufNewFile,BufRead *.xhtml setlocal statusline+=/    "Separator
+:autocmd BufNewFile,BufRead *.xhtml setlocal statusline+=[Current:\ %-4l]\ [Total:\ %4L] "[Current line] [Total lines]
+:autocmd BufNewFile,BufRead *.xhtml setlocal statusline+=col:\ %c,
+:augroup END
+":autocmd BufNewFile,BufRead *.xhtml setlocal number
+":autocmd BufNewFile,BufRead *.xhtml setlocal statusline+=/
+":autocmd BufNewFile,BufRead *.xhtml setlocal wrap
+":autocmd BufNewFile,BufRead *.js setlocal nowrap
+":autocmd BufNewFile,BufRead *.html setlocal nowrap
+":augroup END
+" }}}
+
+" Status Line (file type js)-----{{{
+:augroup statusline_ch17_js 
+:autocmd!
+":autocmd BufNewFile * :write
+":autocmd BufNewFile *.js :write
+":autocmd BufNewFile,BufRead *.js setlocal 
+:autocmd BufNewFile,BufRead *.js setlocal laststatus=2
+":autocmd BufNewFile,BufRead *.js setlocal statusline=
+:autocmd BufNewFile,BufRead *.js setlocal statusline+=%F\ -\ FileType:\ %y "abs path to the file; FileType
+":autocmd BufNewFile,BufRead *.js setlocal statusline+=%=    "Switch to the right side
+:autocmd BufNewFile,BufRead *.js setlocal statusline+=/    "Separator
+:autocmd BufNewFile,BufRead *.js setlocal statusline+=[Current:\ %-4l]\ [Total:\ %4L] "[Current line] [Total lines]
+:autocmd BufNewFile,BufRead *.js setlocal statusline+=col:\ %c,
+:augroup END
+":autocmd BufNewFile,BufRead *.js setlocal number
+":autocmd BufNewFile,BufRead *.js setlocal statusline+=/
+":autocmd BufNewFile,BufRead *.js setlocal wrap
+":autocmd BufNewFile,BufRead *.js setlocal nowrap
+":autocmd BufNewFile,BufRead *.html setlocal nowrap
+":augroup END
+" }}}
+
+" Status Line (file type pl)-----{{{
+:augroup statusline_ch17_pl 
+:autocmd!
+":autocmd BufNewFile * :write
+":autocmd BufNewFile *.pl :write
+":autocmd BufNewFile,BufRead *.pl setlocal 
+:autocmd BufNewFile,BufRead *.pl setlocal laststatus=2
+":autocmd BufNewFile,BufRead *.pl setlocal statusline=
+:autocmd BufNewFile,BufRead *.pl setlocal statusline+=%F\ -\ FileType:\ %y "abs path to the file; FileType
+":autocmd BufNewFile,BufRead *.pl setlocal statusline+=%=    "Switch to the right side
+:autocmd BufNewFile,BufRead *.pl setlocal statusline+=/    "Separator
+:autocmd BufNewFile,BufRead *.pl setlocal statusline+=[Current:\ %-4l]\ [Total:\ %4L] "[Current line] [Total lines]
+:autocmd BufNewFile,BufRead *.pl setlocal statusline+=col:\ %c,
+:augroup END
+":autocmd BufNewFile,BufRead *.pl setlocal number
+":autocmd BufNewFile,BufRead *.pl setlocal statusline+=/
+":autocmd BufNewFile,BufRead *.pl setlocal wrap
+":autocmd BufNewFile,BufRead *.pl setlocal nowrap
+":autocmd BufNewFile,BufRead *.html setlocal nowrap
+":augroup END
+" }}}
+
+
+"-- --}}}
